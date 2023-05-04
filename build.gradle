@@ -4,6 +4,7 @@ plugins {
     id 'com.diffplug.spotless' version '6.18.0'
     id 'com.star-zero.gradle.githook' version '1.2.1'
     id 'name.remal.sonarlint' version '3.1.0' apply false
+    id 'ru.netris.commitlint' version '1.4.1'
 }
 
 allprojects {
@@ -124,6 +125,9 @@ githook {
     hooks {
         'pre-commit' {
             task = 'spotlessCheck sonarlintMain sonarlintTest'
+        }
+        'commit-msg' {
+            task = 'commitlint -Dmsgfile=\$1'
         }
     }
 }
