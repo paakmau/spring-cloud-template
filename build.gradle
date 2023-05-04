@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '3.0.6' apply false
     id 'io.spring.dependency-management' version '1.1.0' apply false
+    id 'com.diffplug.spotless' version '6.18.0'
 }
 
 allprojects {
@@ -62,5 +63,56 @@ applicationProjects.each { applicationProject ->
             runtimeOnly 'com.mysql:mysql-connector-j'
             testImplementation 'org.springframework.boot:spring-boot-starter-test'
         }
+    }
+}
+
+spotless {
+    java {
+        target '*/src/*/java/**/*.java'
+
+        importOrder()
+        removeUnusedImports()
+
+        googleJavaFormat().aosp()
+    }
+
+    groovyGradle {
+        target '**/*.gradle'
+
+        greclipse()
+
+        indentWithSpaces()
+    }
+
+    json {
+        target '**/*.json'
+        targetExclude '*/bin/**/*.json'
+
+        eclipseWtp('json')
+
+        indentWithSpaces()
+    }
+
+    format 'md', {
+        target '**/*.md'
+
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+
+    format 'yaml', {
+        target  '**/*.yaml'
+
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+
+    format 'dotfiles', {
+        target '.gitignore', '.gitattributes'
+
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
     }
 }
