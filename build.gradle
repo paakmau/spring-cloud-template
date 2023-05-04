@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '3.0.6' apply false
     id 'io.spring.dependency-management' version '1.1.0' apply false
     id 'com.diffplug.spotless' version '6.18.0'
+    id 'com.star-zero.gradle.githook' version '1.2.1'
     id 'name.remal.sonarlint' version '3.1.0' apply false
 }
 
@@ -116,5 +117,13 @@ spotless {
         trimTrailingWhitespace()
         indentWithSpaces(2)
         endWithNewline()
+    }
+}
+
+githook {
+    hooks {
+        'pre-commit' {
+            task = 'spotlessCheck sonarlintMain sonarlintTest'
+        }
     }
 }
