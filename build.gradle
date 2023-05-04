@@ -1,0 +1,66 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.6' apply false
+    id 'io.spring.dependency-management' version '1.1.0' apply false
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    version = '0.0.1-SNAPSHOT'
+}
+
+subprojects {
+    apply {
+        plugin('java')
+        plugin('io.spring.dependency-management')
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+def libraryProjects = [project(':demo-common')]
+
+libraryProjects.each { libraryProject ->
+    configure(libraryProject) {
+        dependencyManagement {
+            imports {
+                mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+            }
+        }
+
+        dependencies {
+            implementation 'org.springframework.boot:spring-boot-starter'
+        }
+    }
+}
+
+def applicationProjects = [
+    project(':demo-book'),
+    project(':demo-loan')
+]
+
+applicationProjects.each { applicationProject ->
+    configure(applicationProject) {
+        apply {
+            plugin('org.springframework.boot')
+        }
+
+        group = 'com.example'
+        sourceCompatibility = '17'
+
+        dependencies {
+            implementation project(':demo-common')
+            implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+            implementation 'org.springframework.boot:spring-boot-starter-validation'
+            implementation 'org.springframework.boot:spring-boot-starter-web'
+            developmentOnly 'org.springframework.boot:spring-boot-devtools'
+            runtimeOnly 'com.h2database:h2'
+            runtimeOnly 'com.mysql:mysql-connector-j'
+            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        }
+    }
+}

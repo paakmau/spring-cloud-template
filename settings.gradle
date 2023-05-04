@@ -1,0 +1,5 @@
+rootProject.name = 'demo'
+
+include('demo-book')
+include('demo-common')
+include('demo-loan')
